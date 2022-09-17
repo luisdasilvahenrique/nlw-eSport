@@ -7,7 +7,7 @@ import "../styles/main.css";
 
 import logoImg from "./assets/logo-nlw-esports.svg";
 import { useEffect, useState } from "react";
-import { Input } from "./components/Form/input";
+import { Input } from "./components/Form/Input";
 
 interface Games {
   id: string;

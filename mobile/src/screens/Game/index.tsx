@@ -3,21 +3,23 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import logoImg from '../../assets/logo-nlw-esports.png'
-import { Background } from '../../Components/Background';
+import { FlatList, Image, TouchableOpacity, View } from 'react-native';
+import { GameParams } from '../../@types/@navigation';
 
 import { Text } from 'react-native';
 
 import { styles } from './styles';
 import { THEME } from '../../theme';
 
-import { GameParams } from '../../@types/@navigation';
-import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { Heading } from '../../Components/Heading';
 import { DuoCard, DuoCardProps } from '../../Components/DuoCard';
+import { Background } from '../../Components/Background';
+import { DuoMatch } from '../../Components/DuoMatch';
 
 export function Game() {
 
   const [duos, setDuos] = useState<DuoCardProps[]>([]);
+  const [discordDuoSelected, setDiscordDuoSelected] = useState('');
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -25,6 +27,12 @@ export function Game() {
 
   function handleGoBack() {
     navigation.goBack();
+  }
+
+  async function GetDiscordUser(adsId: string){
+    fetch(`http://192.168.1.5:3333/ads/${adsId}/discord`)
+    .then(response => response.json())
+    .then(data => setDiscordDuoSelected(data.discord))
   }
 
   useEffect(() => {
@@ -69,8 +77,7 @@ export function Game() {
           renderItem={({item}) => (
             <DuoCard 
             data={item}
-            onConnect={()=> { }}
-
+            onConnect={()=> GetDiscordUser(item.id)}
             />
           )}
           horizontal
@@ -84,6 +91,11 @@ export function Game() {
           )}
         />
           
+        <DuoMatch  
+          onClose={() => setDiscordDuoSelected('')}
+          visible={discordDuoSelected.length > 0}
+          discord={discordDuoSelected}
+        /> 
         
       </SafeAreaView>
     </Background>
